@@ -56,13 +56,29 @@ public class Grid : MonoBehaviour
         return new Vector3(b.x, b.y, b.z);
     }
 
-    public void AddSquare(GridSquare square)
+    public void AddSquare(GridSquare square, int h, int w)
     {
         CacheMaps();
         allSquares.Add(square);
         squaresByPosition[square.Position] = square;
 
         ConnectSquareToNeighbors(square);
+        if (square.Position.x <= w / 2 && square.Position.z <= h / 2)
+        {
+            square.quadrant = Quadrant.FirstQuadrant;
+        }
+        else if (square.Position.x > w / 2 && square.Position.z <= h / 2)
+        {
+            square.quadrant = Quadrant.SecondQuadrant;
+        }
+        else if (square.Position.x <= w / 2 && square.Position.z > h / 2)
+        {
+            square.quadrant = Quadrant.ThirdQuadrant;
+        }
+        else if(square.Position.x > w / 2 && square.Position.z > h / 2)
+        {
+            square.quadrant = Quadrant.FourthQuadrant;
+        }
     }
 
     private void ConnectSquareToNeighbors(GridSquare square)

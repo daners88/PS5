@@ -9,6 +9,8 @@ public class GridPCG : MonoBehaviour
     public Grid grid = null;
     public GridSquare squarePrefab = null;
     public GameObject playerPrefab = null;
+    public Door doorPrefab = null;
+    public MiniMapCam mmc = null;
     public float gridSize = 1;
     public int gridHeight = 10;
     public int gridWidth = 10;
@@ -54,10 +56,10 @@ public class GridPCG : MonoBehaviour
                 u = next[u];
             }
         }
-        RemoveWalls(totalSquares, next);
+        RemoveWallsPlaceDoors(totalSquares, next);
     }
 
-    public void RemoveWalls(int totalSquares, List<int> next)
+    public void RemoveWallsPlaceDoors(int totalSquares, List<int> next)
     {
         int nextID = -1;
         for (int i = 1; i < next.Count; i++)
@@ -70,25 +72,30 @@ public class GridPCG : MonoBehaviour
 
         for (int i = 1; i < totalSquares; i++)
         {
+            if (grid.AllSquares[i].quadrant != grid.AllSquares[grid.AllSquares[i].nextSquareID].quadrant)
+            {
+                grid.AllSquares[i].PlaceDoor(grid.AllSquares[grid.AllSquares[i].nextSquareID]);
+            }
+
             if (grid.AllSquares[i].Position.z < grid.AllSquares[grid.AllSquares[i].nextSquareID].Position.z)
             {
-                grid.AllSquares[i].walls[0].SetActive(false);
-                grid.AllSquares[grid.AllSquares[i].nextSquareID].walls[2].SetActive(false);
+                grid.AllSquares[i].CheckRemoveWall(0, gridHeight, gridWidth);
+                grid.AllSquares[grid.AllSquares[i].nextSquareID].CheckRemoveWall(2, gridHeight, gridWidth);
             }
             else if (grid.AllSquares[i].Position.z > grid.AllSquares[grid.AllSquares[i].nextSquareID].Position.z)
             {
-                grid.AllSquares[i].walls[2].SetActive(false);
-                grid.AllSquares[grid.AllSquares[i].nextSquareID].walls[0].SetActive(false);
+                grid.AllSquares[i].CheckRemoveWall(2, gridHeight, gridWidth);
+                grid.AllSquares[grid.AllSquares[i].nextSquareID].CheckRemoveWall(0, gridHeight, gridWidth);
             }
             else if (grid.AllSquares[i].Position.x < grid.AllSquares[grid.AllSquares[i].nextSquareID].Position.x)
             {
-                grid.AllSquares[i].walls[1].SetActive(false);
-                grid.AllSquares[grid.AllSquares[i].nextSquareID].walls[3].SetActive(false);
+                grid.AllSquares[i].CheckRemoveWall(1, gridHeight, gridWidth);
+                grid.AllSquares[grid.AllSquares[i].nextSquareID].CheckRemoveWall(3, gridHeight, gridWidth);
             }
             else if (grid.AllSquares[i].Position.x > grid.AllSquares[grid.AllSquares[i].nextSquareID].Position.x)
             {
-                grid.AllSquares[i].walls[3].SetActive(false);
-                grid.AllSquares[grid.AllSquares[i].nextSquareID].walls[1].SetActive(false);
+                grid.AllSquares[i].CheckRemoveWall(3, gridHeight, gridWidth);
+                grid.AllSquares[grid.AllSquares[i].nextSquareID].CheckRemoveWall(1, gridHeight, gridWidth);
             }
         }
 
@@ -108,17 +115,17 @@ public class GridPCG : MonoBehaviour
 
     public void SpawnRooms(int totalSquares)
     {
-        int numRoomsToSpawn = random.Next(0, (int)Math.Ceiling(totalSquares * .025));
+        int numRoomsToSpawn = random.Next(0, (int)Math.Ceiling(totalSquares * .02) > 1 ? (int)Math.Ceiling(totalSquares * .02) : 1);
 
         for(int i = 0; i < numRoomsToSpawn; i++)
         {
             GridSquare startingSpot = grid.AllSquares[random.Next(0, grid.AllSquares.Count)];
-            int roomSize = random.Next(3, (int)Math.Ceiling(totalSquares/numRoomsToSpawn * 0.01) > 3 ? (int)Math.Ceiling(totalSquares / numRoomsToSpawn * 0.01) : 4);
+            int roomSize = random.Next(2, (int)Math.Ceiling(totalSquares/numRoomsToSpawn * 0.01) > 2 ? (int)Math.Ceiling(totalSquares / numRoomsToSpawn * 0.01) : 3);
             HashSet<GridSquare> cellsInRoom = new HashSet<GridSquare>();
             cellsInRoom = GetRoomCells(startingSpot, roomSize);
             foreach(var cell in cellsInRoom)
             {
-                cell.RemoveAllWalls();
+                cell.RemoveAllWalls(gridHeight, gridWidth);
             }
         }
     }
@@ -201,9 +208,10 @@ public class GridPCG : MonoBehaviour
 
     public void SpawnPlayer()
     {
-        Vector3 newPos = new Vector3(grid.AllSquares[0].transform.localScale.x / 2, grid.AllSquares[0].transform.localScale.y + gridSize, grid.AllSquares[0].transform.localScale.z / 2);
-        GameObject player = Instantiate(playerPrefab, grid.AllSquares[grid.AllSquares.Count - 1].Position + newPos, Quaternion.identity, grid.transform);
+        Vector3 newPos = new Vector3(0, grid.AllSquares[0].transform.localScale.y + gridSize, 0f);
+        GameObject player = Instantiate(playerPrefab, newPos, Quaternion.identity, grid.transform);
         player.transform.localScale = player.transform.localScale / 2;
+        mmc.SetPlayer(player.transform);
     }
 
     public GridSquare CreateSquare(Vector3Int pos, int curID)
@@ -211,7 +219,7 @@ public class GridPCG : MonoBehaviour
         GridSquare sq = Instantiate(squarePrefab, grid.transform);
         sq.Position = pos;
         sq.SetID(curID);
-        grid.AddSquare(sq);
+        grid.AddSquare(sq, gridHeight, gridWidth);
         return sq;
     }
 
