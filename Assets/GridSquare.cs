@@ -17,6 +17,7 @@ public class GridSquare : MonoBehaviour
     [SerializeField]
     private int square_id = -1;
     public bool includedInRoom = false;
+    public bool gatherTrigger = false;
     public Quadrant quadrant;
     [SerializeField]
     public List<GameObject> walls = null;

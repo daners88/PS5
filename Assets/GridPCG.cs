@@ -9,6 +9,7 @@ public class GridPCG : MonoBehaviour
     public Grid grid = null;
     public GridSquare squarePrefab = null;
     public GameObject playerPrefab = null;
+    public List<GameObject> keys = null;
     public Door doorPrefab = null;
     public MiniMapCam mmc = null;
     public float gridSize = 1;
@@ -57,6 +58,111 @@ public class GridPCG : MonoBehaviour
             }
         }
         RemoveWallsPlaceDoors(totalSquares, next);
+        PlaceKeys();
+    }
+
+    public void PlaceKeys()
+    {
+        List<GridSquare> Quad1 = grid.AllSquares.Where(s => s.quadrant == Quadrant.FirstQuadrant).ToList();
+        List<GridSquare> Quad2 = grid.AllSquares.Where(s => s.quadrant == Quadrant.SecondQuadrant).ToList();
+        List<GridSquare> Quad3 = grid.AllSquares.Where(s => s.quadrant == Quadrant.ThirdQuadrant).ToList();
+        GridSquare q1key = null, q2key = null, q3key = null;
+        bool locker = true;
+        while(locker)
+        {
+            locker = false;
+            q1key = Quad1[random.Next(0, Quad1.Count)];
+            HashSet<GridSquare> quadBuffer = new HashSet<GridSquare>();
+            quadBuffer = GatherNeighbors(q1key, 3);
+
+            foreach (var cell in quadBuffer)
+            {
+                if(cell.quadrant != Quadrant.FirstQuadrant)
+                {
+                    locker = true;
+                    foreach (var c in quadBuffer)
+                    {
+                        c.gatherTrigger = false;
+                    }
+                    break;
+                }
+            }
+        }
+        locker = true;
+        while (locker)
+        {
+            locker = false;
+            q2key = Quad2[random.Next(0, Quad2.Count)];
+            HashSet<GridSquare> quadBuffer = new HashSet<GridSquare>();
+            quadBuffer = GatherNeighbors(q2key, 3);
+
+            foreach (var cell in quadBuffer)
+            {
+                if (cell.quadrant != Quadrant.SecondQuadrant)
+                {
+                    locker = true;
+                    foreach (var c in quadBuffer)
+                    {
+                        c.gatherTrigger = false;
+                    }
+                    break;
+                }
+            }
+        }
+        locker = true;
+        while (locker)
+        {
+            locker = false;
+            q3key = Quad3[random.Next(0, Quad3.Count)];
+            HashSet<GridSquare> quadBuffer = new HashSet<GridSquare>();
+            quadBuffer = GatherNeighbors(q3key, 3);
+
+            foreach (var cell in quadBuffer)
+            {
+                if (cell.quadrant != Quadrant.ThirdQuadrant)
+                {
+                    locker = true;
+                    foreach (var c in quadBuffer)
+                    {
+                        c.gatherTrigger = false;
+                    }
+                    break;
+                }
+            }
+        }
+        
+        GameObject key1 = Instantiate(keys[0], q1key.Position + new Vector3(0f, gridSize, 0f), Quaternion.identity, grid.transform);
+        key1.transform.localScale = key1.transform.localScale / 2;
+        GameObject key2 = Instantiate(keys[1], q2key.Position + new Vector3(0f, gridSize, 0f), Quaternion.identity, grid.transform);
+        key2.transform.localScale = key2.transform.localScale / 2;
+        GameObject key3 = Instantiate(keys[2], q3key.Position + new Vector3(0f, gridSize, 0f), Quaternion.identity, grid.transform);
+        key3.transform.localScale = key3.transform.localScale / 2;
+
+    }
+
+    HashSet<GridSquare> GatherNeighbors(GridSquare currCell, int remainingSize)
+    {
+        HashSet<GridSquare> cells = new HashSet<GridSquare>();
+        currCell.gatherTrigger = true;
+        foreach (var neighbor in currCell.Neighbors)
+        {
+            if (remainingSize > 0)
+            {
+                if (!neighbor.gatherTrigger)
+                {
+                    cells.UnionWith(GetRoomCells(neighbor, remainingSize - 1));
+                }
+                else
+                {
+                    cells.Add(neighbor);
+                }
+            }
+            else
+            {
+                cells.Add(neighbor);
+            }
+        }
+        return cells;
     }
 
     public void RemoveWallsPlaceDoors(int totalSquares, List<int> next)
