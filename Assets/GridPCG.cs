@@ -19,6 +19,7 @@ public class GridPCG : MonoBehaviour
     public System.Random random = null;
     public System.Random seedGenerator = null;
     public int seed = 0;
+    GameObject player = null;
 
     public List<Vector3Int> directions = new List<Vector3Int>() {
         new Vector3Int(1, 0, 0),
@@ -133,10 +134,13 @@ public class GridPCG : MonoBehaviour
         
         GameObject key1 = Instantiate(keys[0], q1key.Position + new Vector3(0f, gridSize, 0f), Quaternion.identity, grid.transform);
         key1.transform.localScale = key1.transform.localScale / 2;
+        key1.transform.localPosition = q1key.Position + new Vector3(0f, 1, 0f);
         GameObject key2 = Instantiate(keys[1], q2key.Position + new Vector3(0f, gridSize, 0f), Quaternion.identity, grid.transform);
         key2.transform.localScale = key2.transform.localScale / 2;
+        key2.transform.localPosition = q2key.Position + new Vector3(0f, 1, 0f);
         GameObject key3 = Instantiate(keys[2], q3key.Position + new Vector3(0f, gridSize, 0f), Quaternion.identity, grid.transform);
         key3.transform.localScale = key3.transform.localScale / 2;
+        key3.transform.localPosition = q3key.Position + new Vector3(0f, 1, 0f);
 
     }
 
@@ -315,7 +319,7 @@ public class GridPCG : MonoBehaviour
     public void SpawnPlayer()
     {
         Vector3 newPos = new Vector3(0, grid.AllSquares[0].transform.localScale.y + gridSize, 0f);
-        GameObject player = Instantiate(playerPrefab, newPos, Quaternion.identity, grid.transform);
+        player = Instantiate(playerPrefab, newPos, Quaternion.identity, grid.transform);
         player.transform.localScale = player.transform.localScale / 2;
         mmc.SetPlayer(player.transform);
     }

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5804764170169905441}
   - component: {fileID: 1219474639467406632}
   - component: {fileID: 2266467892642257724}
+  - component: {fileID: -7405526160458480831}
   m_Layer: 0
   m_Name: Key3
   m_TagString: Untagged
@@ -58,7 +59,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0e4618e3f787d7d43bed2c91d05146df, type: 2}
+  - {fileID: 2100000, guid: b4dd6333204c2bf4f920382fec29f0a0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -86,8 +87,21 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3546625355167182069}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-7405526160458480831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3546625355167182069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d9618c4dd6621e409bf9e053731072e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keytype: 24

@@ -5,10 +5,13 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody rb;
-    public float speed = 1500.0f;
-    public float rotSpeed = 50.0f;
+    public float speed = 4000.0f;
+    public float rotSpeed = 200.0f;
     private float verticalMovement;
     private float horizontalMovement;
+    public bool quad12Enabled = false;
+    public bool quad13Enabled = false;
+    public bool quad24Enabled = false;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
