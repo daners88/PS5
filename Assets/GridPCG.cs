@@ -8,6 +8,7 @@ public class GridPCG : MonoBehaviour
 {
     public Grid grid = null;
     public GridSquare squarePrefab = null;
+    public GridSquare victorySquarePrefab = null;
     public GameObject playerPrefab = null;
     public List<GameObject> keys = null;
     public Door doorPrefab = null;
@@ -20,6 +21,10 @@ public class GridPCG : MonoBehaviour
     public System.Random seedGenerator = null;
     public int seed = 0;
     GameObject player = null;
+    List<GridSquare> Quad12DoorSquares = new List<GridSquare>();
+    List<GridSquare> Quad13DoorSquares = new List<GridSquare>();
+    List<GridSquare> Quad24DoorSquares = new List<GridSquare>();
+    List<GridSquare> Quad34DoorSquares = new List<GridSquare>();
 
     public List<Vector3Int> directions = new List<Vector3Int>() {
         new Vector3Int(1, 0, 0),
@@ -59,22 +64,64 @@ public class GridPCG : MonoBehaviour
             }
         }
         RemoveWallsPlaceDoors(totalSquares, next);
-        PlaceKeys();
+        PlaceKeysAndVictory();
     }
 
-    public void PlaceKeys()
+    private void Update()
+    {
+        if(player)
+        {
+            if (player.GetComponent<PlayerController>().quad12Enabled)
+            {
+                foreach (var sq in Quad12DoorSquares)
+                {
+                    sq.OpenDoors();
+                }
+                player.GetComponent<PlayerController>().quad12Enabled = false;
+            }
+            else if (player.GetComponent<PlayerController>().quad13Enabled)
+            {
+                foreach (var sq in Quad13DoorSquares)
+                {
+                    sq.OpenDoors();
+                }
+                player.GetComponent<PlayerController>().quad13Enabled = false;
+            }
+            else if (player.GetComponent<PlayerController>().quad24Enabled)
+            {
+                foreach (var sq in Quad24DoorSquares)
+                {
+                    sq.OpenDoors();
+                }
+                player.GetComponent<PlayerController>().quad24Enabled = false;
+            }
+            else if (player.GetComponent<PlayerController>().quad34Enabled)
+            {
+                foreach (var sq in Quad34DoorSquares)
+                {
+                    sq.OpenDoors();
+                }
+                player.GetComponent<PlayerController>().quad34Enabled = false;
+            }
+        }
+
+    }
+
+    public void PlaceKeysAndVictory()
     {
         List<GridSquare> Quad1 = grid.AllSquares.Where(s => s.quadrant == Quadrant.FirstQuadrant).ToList();
         List<GridSquare> Quad2 = grid.AllSquares.Where(s => s.quadrant == Quadrant.SecondQuadrant).ToList();
         List<GridSquare> Quad3 = grid.AllSquares.Where(s => s.quadrant == Quadrant.ThirdQuadrant).ToList();
-        GridSquare q1key = null, q2key = null, q3key = null;
+        List<GridSquare> Quad4 = grid.AllSquares.Where(s => s.quadrant == Quadrant.FourthQuadrant).ToList();
+        GridSquare q1key = null, q2key = null, q3key = null, q4key = null;
+        GridSquare victorySquare = null;
         bool locker = true;
         while(locker)
         {
             locker = false;
             q1key = Quad1[random.Next(0, Quad1.Count)];
             HashSet<GridSquare> quadBuffer = new HashSet<GridSquare>();
-            quadBuffer = GatherNeighbors(q1key, 3);
+            quadBuffer = GatherNeighbors(q1key, 2);
 
             foreach (var cell in quadBuffer)
             {
@@ -95,7 +142,7 @@ public class GridPCG : MonoBehaviour
             locker = false;
             q2key = Quad2[random.Next(0, Quad2.Count)];
             HashSet<GridSquare> quadBuffer = new HashSet<GridSquare>();
-            quadBuffer = GatherNeighbors(q2key, 3);
+            quadBuffer = GatherNeighbors(q2key, 2);
 
             foreach (var cell in quadBuffer)
             {
@@ -116,7 +163,7 @@ public class GridPCG : MonoBehaviour
             locker = false;
             q3key = Quad3[random.Next(0, Quad3.Count)];
             HashSet<GridSquare> quadBuffer = new HashSet<GridSquare>();
-            quadBuffer = GatherNeighbors(q3key, 3);
+            quadBuffer = GatherNeighbors(q3key, 2);
 
             foreach (var cell in quadBuffer)
             {
@@ -131,17 +178,66 @@ public class GridPCG : MonoBehaviour
                 }
             }
         }
-        
+        locker = true;
+        while (locker)
+        {
+            locker = false;
+            q4key = Quad3[random.Next(0, Quad3.Count)];
+            HashSet<GridSquare> quadBuffer = new HashSet<GridSquare>();
+            quadBuffer = GatherNeighbors(q4key, 2);
+
+            foreach (var cell in quadBuffer)
+            {
+                if (cell.quadrant != Quadrant.ThirdQuadrant)
+                {
+                    locker = true;
+                    foreach (var c in quadBuffer)
+                    {
+                        c.gatherTrigger = false;
+                    }
+                    break;
+                }
+            }
+        }
+        locker = true;
+        while (locker)
+        {
+            locker = false;
+            victorySquare = Quad4[random.Next(0, Quad4.Count)];
+            if (victorySquare.Position == q4key.Position)
+            {
+                locker = true;
+            }
+        }
+
         GameObject key1 = Instantiate(keys[0], q1key.Position + new Vector3(0f, gridSize, 0f), Quaternion.identity, grid.transform);
         key1.transform.localScale = key1.transform.localScale / 2;
         key1.transform.localPosition = q1key.Position + new Vector3(0f, 1, 0f);
+        q1key.RemoveAllWalls(gridHeight, gridWidth);
         GameObject key2 = Instantiate(keys[1], q2key.Position + new Vector3(0f, gridSize, 0f), Quaternion.identity, grid.transform);
         key2.transform.localScale = key2.transform.localScale / 2;
         key2.transform.localPosition = q2key.Position + new Vector3(0f, 1, 0f);
+        q2key.RemoveAllWalls(gridHeight, gridWidth);
         GameObject key3 = Instantiate(keys[2], q3key.Position + new Vector3(0f, gridSize, 0f), Quaternion.identity, grid.transform);
         key3.transform.localScale = key3.transform.localScale / 2;
         key3.transform.localPosition = q3key.Position + new Vector3(0f, 1, 0f);
-
+        q3key.RemoveAllWalls(gridHeight, gridWidth);
+        GameObject key4 = Instantiate(keys[3], q4key.Position + new Vector3(0f, gridSize, 0f), Quaternion.identity, grid.transform);
+        key4.transform.localScale = key4.transform.localScale / 2;
+        key4.transform.localPosition = q4key.Position + new Vector3(0f, 1, 0f);
+        q4key.RemoveAllWalls(gridHeight, gridWidth);
+        GridSquare vs = Instantiate(victorySquarePrefab, grid.transform);
+        vs.Position = victorySquare.Position;
+        vs.transform.localPosition = victorySquare.Position;
+        for(int i = 0; i < 4; i++)
+        {
+            if(!victorySquare.walls[i].activeSelf)
+            {
+                vs.walls[i].SetActive(false);
+            }
+        }
+        victorySquare.gameObject.SetActive(false);
+        // sq.RemoveFriction();
     }
 
     HashSet<GridSquare> GatherNeighbors(GridSquare currCell, int remainingSize)
@@ -185,6 +281,22 @@ public class GridPCG : MonoBehaviour
             if (grid.AllSquares[i].quadrant != grid.AllSquares[grid.AllSquares[i].nextSquareID].quadrant)
             {
                 grid.AllSquares[i].PlaceDoor(grid.AllSquares[grid.AllSquares[i].nextSquareID]);
+                if((grid.AllSquares[i].quadrant == Quadrant.FirstQuadrant && grid.AllSquares[grid.AllSquares[i].nextSquareID].quadrant == Quadrant.SecondQuadrant) || (grid.AllSquares[i].quadrant == Quadrant.SecondQuadrant && grid.AllSquares[grid.AllSquares[i].nextSquareID].quadrant == Quadrant.FirstQuadrant))
+                {
+                    Quad12DoorSquares.Add(grid.AllSquares[i]);
+                }
+                else if((grid.AllSquares[i].quadrant == Quadrant.FirstQuadrant && grid.AllSquares[grid.AllSquares[i].nextSquareID].quadrant == Quadrant.ThirdQuadrant) || (grid.AllSquares[i].quadrant == Quadrant.ThirdQuadrant && grid.AllSquares[grid.AllSquares[i].nextSquareID].quadrant == Quadrant.FirstQuadrant))
+                {
+                    Quad13DoorSquares.Add(grid.AllSquares[i]);
+                }
+                else if ((grid.AllSquares[i].quadrant == Quadrant.SecondQuadrant && grid.AllSquares[grid.AllSquares[i].nextSquareID].quadrant == Quadrant.FourthQuadrant) || (grid.AllSquares[i].quadrant == Quadrant.FourthQuadrant && grid.AllSquares[grid.AllSquares[i].nextSquareID].quadrant == Quadrant.SecondQuadrant))
+                {
+                    Quad24DoorSquares.Add(grid.AllSquares[i]);
+                }
+                else if ((grid.AllSquares[i].quadrant == Quadrant.ThirdQuadrant && grid.AllSquares[grid.AllSquares[i].nextSquareID].quadrant == Quadrant.FourthQuadrant) || (grid.AllSquares[i].quadrant == Quadrant.FourthQuadrant && grid.AllSquares[grid.AllSquares[i].nextSquareID].quadrant == Quadrant.ThirdQuadrant))
+                {
+                    Quad34DoorSquares.Add(grid.AllSquares[i]);
+                }
             }
 
             if (grid.AllSquares[i].Position.z < grid.AllSquares[grid.AllSquares[i].nextSquareID].Position.z)
@@ -209,7 +321,7 @@ public class GridPCG : MonoBehaviour
             }
         }
 
-        SpawnRooms(totalSquares);
+       // SpawnRooms(totalSquares);
 
         grid.transform.localScale *= gridSize;
 
@@ -329,6 +441,7 @@ public class GridPCG : MonoBehaviour
         GridSquare sq = Instantiate(squarePrefab, grid.transform);
         sq.Position = pos;
         sq.SetID(curID);
+       // sq.RemoveFriction();
         grid.AddSquare(sq, gridHeight, gridWidth);
         return sq;
     }

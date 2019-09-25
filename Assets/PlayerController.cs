@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     public bool quad12Enabled = false;
     public bool quad13Enabled = false;
     public bool quad24Enabled = false;
+    public bool quad34Enabled = false;
     void Start()
     {
         rb = GetComponent<Rigidbody>();

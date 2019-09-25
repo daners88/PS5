@@ -38,6 +38,17 @@ public class GridSquare : MonoBehaviour
         }
     }
 
+    public void RemoveFriction()
+    {
+        foreach(var wall in walls)
+        {
+            PhysicMaterial pm = new PhysicMaterial();
+            pm.dynamicFriction = 0;
+            pm.staticFriction = 0;
+            wall.GetComponent<Collider>().material = pm;
+        }
+    }
+
     public void PlaceDoor(GridSquare nextSq)
     {
         if (quadrant == Quadrant.FirstQuadrant && nextSq.quadrant == Quadrant.SecondQuadrant)
@@ -111,6 +122,17 @@ public class GridSquare : MonoBehaviour
                 break;
             default:
                 break;
+        }
+    }
+
+    public void OpenDoors()
+    {
+        foreach(var door in doors)
+        {
+            if(door.gameObject.activeSelf)
+            {
+                door.gameObject.SetActive(false);
+            }
         }
     }
 

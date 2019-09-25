@@ -6,7 +6,8 @@ public enum KeyType
 {
     Quad12 = 12,
     Quad13 = 13,
-    Quad24 = 24
+    Quad24 = 24,
+    Quad34 = 34
 }
 public class Key : MonoBehaviour
 {
@@ -35,6 +36,10 @@ public class Key : MonoBehaviour
         else if(keytype == KeyType.Quad24)
         {
             other.transform.parent.gameObject.GetComponent<PlayerController>().quad24Enabled = true;
+        }
+        else if (keytype == KeyType.Quad34)
+        {
+            other.transform.parent.gameObject.GetComponent<PlayerController>().quad34Enabled = true;
         }
         gameObject.SetActive(false);
     }

@@ -152,20 +152,23 @@ MonoBehaviour:
   grid: {fileID: 0}
   squarePrefab: {fileID: 5242959868406867943, guid: a546789b0b099714bad356d83690a444,
     type: 3}
+  victorySquarePrefab: {fileID: 5575958518515796101, guid: a793664c2569fde49b01c51ef28ad93c,
+    type: 3}
   playerPrefab: {fileID: 5226311181475860281, guid: fb07c509638bb4c4d8b55e5862d83d71,
     type: 3}
   keys:
   - {fileID: 7620932472919165518, guid: 5df7bda41669d3e41a67ee284f459743, type: 3}
   - {fileID: 1411278336539027960, guid: 061a52bf092a1f641b8116d4498ebde4, type: 3}
   - {fileID: 3546625355167182069, guid: 67027e01ad6adae42819f72fec27a66c, type: 3}
+  - {fileID: 2805732617634379204, guid: 817131387a22a6e4a967927764ed5c57, type: 3}
   doorPrefab: {fileID: 5683216783285554735, guid: fffac29dbafa4254e9c3b0b4830a3a69,
     type: 3}
   mmc: {fileID: 1620781896}
   gridSize: 50
-  gridHeight: 50
-  gridWidth: 50
+  gridHeight: 20
+  gridWidth: 20
   generateRandomSeed: 1
-  seed: 1000
+  seed: 5000
   directions:
   - {x: 1, y: 0, z: 0}
   - {x: 0, y: 0, z: 1}

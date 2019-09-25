@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1037334497691983872
+--- !u!1 &2805732617634379204
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,47 +8,47 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6884673980841054088}
-  - component: {fileID: 7707903014686467530}
-  - component: {fileID: 2645381201398712510}
-  - component: {fileID: 88025291479248273}
-  - component: {fileID: 5683216783285554735}
+  - component: {fileID: 6812326059647926034}
+  - component: {fileID: 7418077715713096622}
+  - component: {fileID: 3902108937692410206}
+  - component: {fileID: 7421268322756837314}
+  - component: {fileID: -3198694034223435108}
   m_Layer: 0
-  m_Name: Door
+  m_Name: Key4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6884673980841054088
+--- !u!4 &6812326059647926034
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1037334497691983872}
+  m_GameObject: {fileID: 2805732617634379204}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.062, y: 0.625, z: 0}
-  m_LocalScale: {x: 0.05, y: 1, z: 1}
+  m_LocalPosition: {x: 819.8478, y: 829.98083, z: 853.9608}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &7707903014686467530
+--- !u!33 &7418077715713096622
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1037334497691983872}
+  m_GameObject: {fileID: 2805732617634379204}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &2645381201398712510
+--- !u!23 &3902108937692410206
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1037334497691983872}
+  m_GameObject: {fileID: 2805732617634379204}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -59,7 +59,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 2482b456865699c45ac14a7386c64c79, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -79,34 +79,29 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &88025291479248273
+--- !u!65 &7421268322756837314
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1037334497691983872}
-  m_Material: {fileID: 13400000, guid: 10a69c01cb9ef464c9d01c58e82e63cf, type: 2}
-  m_IsTrigger: 0
+  m_GameObject: {fileID: 2805732617634379204}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5683216783285554735
+--- !u!114 &-3198694034223435108
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1037334497691983872}
+  m_GameObject: {fileID: 2805732617634379204}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa07335f16c082d46a935761cf88bcd3, type: 3}
+  m_Script: {fileID: 11500000, guid: 5d9618c4dd6621e409bf9e053731072e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mats:
-  - {fileID: 2100000, guid: b1de762fcc68fa3428e9f83845226ac1, type: 2}
-  - {fileID: 2100000, guid: 732424fcc237217408e0110eee84813b, type: 2}
-  - {fileID: 2100000, guid: b4dd6333204c2bf4f920382fec29f0a0, type: 2}
-  - {fileID: 2100000, guid: 2482b456865699c45ac14a7386c64c79, type: 2}
-  keyReq: 0
+  keytype: 34
